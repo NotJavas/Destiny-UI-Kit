@@ -8,6 +8,8 @@ import { ButtonsSection } from './components/ButtonsSection';
 import { FormsSection } from './components/FormsSection';
 import { CardsSection } from './components/CardsSection';
 import { AlertsSection } from './components/AlertsSection';
+import { StructureSection } from './components/StructureSection';
+import { TemplatesSection } from './components/TemplatesSection';
 
 const CarouselContainer = () => {
     const { activeSection } = useTheme();
@@ -18,7 +20,9 @@ const CarouselContainer = () => {
         <ButtonsSection />,
         <FormsSection />,
         <CardsSection />,
-        <AlertsSection />
+        <AlertsSection />,
+        <StructureSection />,
+        <TemplatesSection />
     ];
 
     return (

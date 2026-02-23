@@ -11,7 +11,9 @@ export const ThemeSelector = () => {
         "Botones",
         "Formularios",
         "Tarjetas",
-        "Alertas y Etiquetas"
+        "Alertas y Etiquetas",
+        "Navegación y Estructura",
+        "Plantillas"
     ];
 
     return (
