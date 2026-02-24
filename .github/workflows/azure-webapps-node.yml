@@ -17,15 +17,17 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
+name: Build and deploy .NET + React app to Azure Web App
+
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '20.x'                # set this to the node version to use
+  AZURE_WEBAPP_NAME: Destiny  # <--- ¡PON AQUÍ EL NOMBRE DE TU APP!
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      
+  DOTNET_VERSION: '8.0.x'             # Ajusta si usas .NET 7 o 6
 
 permissions:
   contents: read
@@ -33,26 +35,52 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
+      # ----------------------------------------------------------------
+      # PASO 1: Construir el Frontend (React / Vite)
+      # ----------------------------------------------------------------
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'Destiny/UI Kit/package-lock.json'
 
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build --if-present
-        npm run test --if-present
+      - name: Install and Build React
+        run: |
+          cd "Destiny/UI Kit"
+          npm ci
+          npm run build
+        # 'npm ci' es más seguro que 'npm install' para servidores
+        # Esto generará la carpeta 'dist' que el .csproj necesita
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v4
-      with:
-        name: node-app
-        path: .
+      # ----------------------------------------------------------------
+      # PASO 2: Construir el Backend (.NET)
+      # ----------------------------------------------------------------
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: dotnet build and publish
+        run: |
+          cd Destiny
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+          # Gracias al cambio en el .csproj, esto incluirá la carpeta 'UI Kit/dist'
+
+      # ----------------------------------------------------------------
+      # PASO 3: Subir el artefacto listo
+      # ----------------------------------------------------------------
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     permissions:
@@ -64,15 +92,15 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v4
-      with:
-        name: node-app
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dotnet-app
 
-    - name: 'Deploy to Azure WebApp'
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
