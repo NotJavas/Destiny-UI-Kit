@@ -70,5 +70,5 @@ jobs:
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'nombre-de-tu-app-en-azure' # CAMBIA ESTO por el nombre real en Azure
+          app-name: 'destiny-ui-kit'
           package: .
