@@ -9,6 +9,7 @@ import { FormsSection } from './components/FormsSection';
 import { CardsSection } from './components/CardsSection';
 import { AlertsSection } from './components/AlertsSection';
 import { StructureSection } from './components/StructureSection';
+import { EffectsSection } from './components/EffectsSection';
 import { TemplatesSection } from './components/TemplatesSection';
 
 const CarouselContainer = () => {
@@ -22,6 +23,7 @@ const CarouselContainer = () => {
         <CardsSection />,
         <AlertsSection />,
         <StructureSection />,
+        <EffectsSection />,
         <TemplatesSection />
     ];
 

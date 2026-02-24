@@ -13,6 +13,7 @@ export const ThemeSelector = () => {
         "Tarjetas",
         "Alertas y Etiquetas",
         "Navegación y Estructura",
+        "Efectos Visuales",
         "Plantillas"
     ];
 
