@@ -17,93 +17,58 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
-name: Build and deploy .NET + React app to Azure Web App
+name: Deploy Destiny-UI-Kit to Azure
 
 on:
   push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
-env:
-  AZURE_WEBAPP_NAME: Destiny  # <--- ¡PON AQUÍ EL NOMBRE DE TU APP!
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      
-  DOTNET_VERSION: '8.0.x'             # Ajusta si usas .NET 7 o 6
-
-permissions:
-  contents: read
+    branches:
+      - main  # O la rama que uses como principal
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # ----------------------------------------------------------------
-      # PASO 1: Construir el Frontend (React / Vite)
-      # ----------------------------------------------------------------
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'Destiny/UI Kit/package-lock.json'
 
-      - name: Install and Build React
-        run: |
-          cd "Destiny/UI Kit"
-          npm install
-          npx vite build
-          npm test --if-present
-          npm ci
-          npm run build
-        # 'npm ci' es más seguro que 'npm install' para servidores
-        # Esto generará la carpeta 'dist' que el .csproj necesita
+      - name: Install dependencies
+        # 'npm ci' es mejor que 'npm install' para CI/CD
+        run: npm ci
 
-      # ----------------------------------------------------------------
-      # PASO 2: Construir el Backend (.NET)
-      # ----------------------------------------------------------------
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Build project
+        # Aquí es donde fallaba. Con npm ci y este comando debería ir fino.
+        run: npm run build
 
-      - name: dotnet build and publish
-        run: |
-          cd Destiny
-          dotnet restore
-          dotnet build --configuration Release
-          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-          # Gracias al cambio en el .csproj, esto incluirá la carpeta 'UI Kit/dist'
-
-      # ----------------------------------------------------------------
-      # PASO 3: Subir el artefacto listo
-      # ----------------------------------------------------------------
-      - name: Upload artifact for deployment job
+      - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
-          name: dotnet-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: node-app
+          path: dist/  # Vite suelta todo en dist/ por defecto
 
   deploy:
-    permissions:
-      contents: none
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Development'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+      name: 'Production'
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: dotnet-app
+          name: node-app
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          app-name: 'nombre-de-tu-app-en-azure' # CAMBIA ESTO por el nombre real en Azure
           package: .
