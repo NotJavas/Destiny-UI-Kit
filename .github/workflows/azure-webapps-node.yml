@@ -52,6 +52,9 @@ jobs:
       - name: Install and Build React
         run: |
           cd "Destiny/UI Kit"
+          npm install
+          npx vite build
+          npm test --if-present
           npm ci
           npm run build
         # 'npm ci' es más seguro que 'npm install' para servidores
