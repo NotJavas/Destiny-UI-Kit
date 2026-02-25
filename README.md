@@ -12,30 +12,30 @@ Este diagrama muestra cómo está organizado el proyecto para facilitar la naveg
 
 ```mermaid
 graph TD
-    Root[Destiny UI Kit]
-    Root --> Config[📂 config]
-    Config --> Themes[themes.js (Variables de color)]
+    Root["Destiny UI Kit"]
+    Root --> Config["📂 config"]
+    Config --> Themes["themes.js (Variables de color)"]
     
-    Root --> Context[📂 context]
-    Context --> ThemeCtx[ThemeContext.jsx (Estado global)]
+    Root --> Context["📂 context"]
+    Context --> ThemeCtx["ThemeContext.jsx (Estado global)"]
     
-    Root --> Components[📂 components]
-    Components --> Atoms[Átomos & Moléculas]
-    Atoms --> Btn[ButtonsSection]
-    Atoms --> Inp[FormsSection]
-    Atoms --> Ico[AssetsSection]
+    Root --> Components["📂 components"]
+    Components --> Atoms["Átomos & Moléculas"]
+    Atoms --> Btn["ButtonsSection"]
+    Atoms --> Inp["FormsSection"]
+    Atoms --> Ico["AssetsSection"]
     
-    Components --> Organisms[Organismos]
-    Organisms --> Cards[CardsSection]
-    Organisms --> Nav[StructureSection]
-    Organisms --> Eff[EffectsSection]
+    Components --> Organisms["Organismos"]
+    Organisms --> Cards["CardsSection"]
+    Organisms --> Nav["StructureSection"]
+    Organisms --> Eff["EffectsSection"]
     
-    Components --> Templates[📂 TemplatesSection]
-    Templates --> Login[Login Screen]
-    Templates --> Map[Map Screen]
-    Templates --> Event[Event Detail]
+    Components --> Templates["📂 TemplatesSection"]
+    Templates --> Login["Login Screen"]
+    Templates --> Map["Map Screen"]
+    Templates --> Event["Event Detail"]
     
-    Root --> Main[index.jsx (Carrusel Principal)]
+    Root --> Main["index.jsx (Carrusel Principal)"]
 ```
 
 ### Descripción de Carpetas
