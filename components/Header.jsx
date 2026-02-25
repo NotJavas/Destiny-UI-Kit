@@ -9,7 +9,7 @@ export const Header = () => {
             <h1 className="text-4xl font-extrabold text-white tracking-tight">
                 Destiny <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">UI Kit</span>
             </h1>
-            <p className="text-lg text-neutral-400 mt-2">Sistema de Diseño — Conectando experiencias en tiempo real — Segundo Push</p>
+            <p className="text-lg text-neutral-400 mt-2">Sistema de Diseño — Conectando experiencias en tiempo real — Tercer push</p>
         </header>
     );
 };
