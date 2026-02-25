@@ -14,6 +14,7 @@ export const ThemeSelector = () => {
         "Alertas y Etiquetas",
         "Navegación y Estructura",
         "Efectos Visuales",
+        "Assets & Iconografía",
         "Plantillas"
     ];
 

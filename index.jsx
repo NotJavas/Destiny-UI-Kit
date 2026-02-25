@@ -10,6 +10,7 @@ import { CardsSection } from './components/CardsSection';
 import { AlertsSection } from './components/AlertsSection';
 import { StructureSection } from './components/StructureSection';
 import { EffectsSection } from './components/EffectsSection';
+import { AssetsSection } from './components/AssetsSection';
 import { TemplatesSection } from './components/TemplatesSection';
 
 const CarouselContainer = () => {
@@ -24,6 +25,7 @@ const CarouselContainer = () => {
         <AlertsSection />,
         <StructureSection />,
         <EffectsSection />,
+        <AssetsSection />,
         <TemplatesSection />
     ];
 
